@@ -6,9 +6,6 @@ MYNAME=`basename $0`
 
 LANG=ja_JP.UTF8
 
-RSYNC_CMD="rsync"
-RSYNC_OPT="-avzS --delete"
-
 #
 # functions
 #
@@ -22,6 +19,18 @@ tsecho () {
     _DATESTR=`LANG=C date +'%Y/%m/%d(%a) %H:%M:%S'`
     echo "${_DATESTR} ${MYNAME}> $*"
 }
+
+#
+# variables
+#
+RSYNC_CMD=`which rsync`
+tsecho "RSYNC_CMD=$RSYNC_CMD"
+if [ -z $RSYNC_CMD ]; then
+    tsecho "ERROR: rsync: no such command"
+    exit 1
+fi
+RSYNC_OPT="-avzS --delete"
+tsecho "RSYNC_OPT=$RSYNC_OPT"
 
 #
 # args
