@@ -60,7 +60,7 @@ if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
     tsecho "BACKUP_RDIR=$BACKUP_RDIR"
 fi
 
-if [ ! -z $REMOTE  ]; then
+if [ ! -z "${REMOTE}"  ]; then
     if ssh $REMOTE ls -d $BACKUP_RDIR > /dev/null; then
         RSYNC_OPT="$RSYNC_OPT -e ssh"
         PREV_BACKUP=`ssh $REMOTE ls -1t $BACKUP_RDIR | grep '^backup-' | head -1`
@@ -93,7 +93,11 @@ tsecho "CMDLINE=$CMDLINE"
 
 eval $CMDLINE
 if [ $? -eq 0 ]; then
-    echo ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
+    if [ ! -z "${REMOTE}" ]; then
+        ssh ${REMOTE} "echo ${DSTDIR} >> ${BACKUP_RDIR}/${COMPLETE_LIST}"
+    else
+        echo ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
+    fi
 fi
 
 echo
