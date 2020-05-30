@@ -94,9 +94,9 @@ tsecho "CMDLINE=$CMDLINE"
 eval $CMDLINE
 if [ $? -eq 0 ]; then
     if [ ! -z "${REMOTE}" ]; then
-        ssh ${REMOTE} "echo ${DSTDIR} >> ${BACKUP_RDIR}/${COMPLETE_LIST}"
+        ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_RDIR}/${COMPLETE_LIST}"
     else
-        echo ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
+        basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
     fi
 fi
 
