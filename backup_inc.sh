@@ -30,7 +30,9 @@ if [ -z $RSYNC_CMD ]; then
     exit 1
 fi
 RSYNC_OPT="-avzS --delete"
-tsecho "RSYNC_OPT=$RSYNC_OPT"
+
+COMPLETE_LIST="complete_list.txt"
+tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
 
 #
 # args
@@ -61,7 +63,7 @@ fi
 if [ ! -z $REMOTE  ]; then
     if ssh $REMOTE ls -d $BACKUP_RDIR > /dev/null; then
         RSYNC_OPT="$RSYNC_OPT -e ssh"
-        PREV_BACKUP=`ssh $REMOTE ls -1t $BACKUP_RDIR | head -1`
+        PREV_BACKUP=`ssh $REMOTE ls -1t $BACKUP_RDIR | grep '^backup-' | head -1`
     else
         tsecho "ERROR: ${REMOTE}:$BACKUP_DIR: invalid directory"
         usage
@@ -69,7 +71,7 @@ if [ ! -z $REMOTE  ]; then
     fi 
 else
     if [ -d $BACKUP_TOP ]; then
-        PREV_BACKUP=`ls -1t ${BACKUP_TOP} | head -1`
+        PREV_BACKUP=`ls -1t ${BACKUP_TOP} | grep '^backup-' | head -1`
     else
         tsecho "ERROR: $BACKUP_TOP: no such directory"
         usage
@@ -90,5 +92,9 @@ fi
 tsecho "CMDLINE=$CMDLINE"
 
 eval $CMDLINE
+if [ $? -eq 0 ]; then
+    echo ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
+fi
+
 echo
 tsecho "done"
