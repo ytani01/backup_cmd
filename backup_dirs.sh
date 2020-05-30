@@ -48,12 +48,10 @@ fi
 # main
 #
 for d in $BACKUP_DIRS; do
-    if [ ! -d $d ]; then
-        tsecho "ERROR: $d: no such directory"
-        continue
-    fi
     CMDLINE="$BACKUP_INC $SRCDIRS $d"
     tsecho "CMDLINE=$CMDLINE"
     eval $CMDLINE
 done
+
+echo
 tsecho "done"

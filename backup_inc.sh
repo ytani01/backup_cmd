@@ -48,16 +48,35 @@ fi
 
 BACKUP_TOP=$1
 tsecho "BACKUP_TOP=$BACKUP_TOP"
-if [ ! -d $BACKUP_TOP ]; then
-    tsecho "ERROR: $BACKUP_TOP: no such directory"
-    usage
-    exit 1
+
+REMOTE=""
+if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
+    REMOTE=`echo $BACKUP_TOP | sed 's/:.*$//'`
+    tsecho "REMOTE=$REMOTE"
+
+    BACKUP_RDIR=`echo $BACKUP_TOP | sed 's/^.*://'`
+    tsecho "BACKUP_RDIR=$BACKUP_RDIR"
 fi
 
-#
-# main
-#
-PREV_BACKUP=`ls -1t ${BACKUP_TOP} | head -1`
+if [ ! -z $REMOTE  ]; then
+    if ssh $REMOTE ls -d $BACKUP_RDIR > /dev/null; then
+        RSYNC_OPT="$RSYNC_OPT -e ssh"
+        PREV_BACKUP=`ssh $REMOTE ls -1t $BACKUP_RDIR | head -1`
+    else
+        tsecho "ERROR: ${REMOTE}:$BACKUP_DIR: invalid directory"
+        usage
+        exit 1
+    fi 
+else
+    if [ -d $BACKUP_TOP ]; then
+        PREV_BACKUP=`ls -1t ${BACKUP_TOP} | head -1`
+    else
+        tsecho "ERROR: $BACKUP_TOP: no such directory"
+        usage
+        exit 1
+    fi
+fi
+tsecho "RSYNC_OPT=$RSYNC_OPT"
 tsecho "PREV_BACKUP=$PREV_BACKUP"
 
 DSTDIR="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`"
@@ -70,4 +89,6 @@ else
 fi
 tsecho "CMDLINE=$CMDLINE"
 
-exec $CMDLINE
+eval $CMDLINE
+echo
+tsecho "done"
