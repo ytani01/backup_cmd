@@ -4,6 +4,10 @@
 #
 MYNAME=`basename $0`
 
+#SRCDIRS="/root /etc /conf /var /usr/local/www `echo /.[0-9]`"
+SRCDIRS="/boot /root /etc /conf /opt /var /usr/local/www"
+tsecho "SRCDIRS=$SRCDIRS"
+
 LANG=ja_JP.UTF8
 
 #
@@ -29,10 +33,6 @@ if [ ! -x $BACKUP_INC ]; then
     tsecho "ERROR: rsync: no such command"
     exit 1
 fi
-
-#SRCDIRS="/root /etc /conf /var /usr/local/www `echo /.[0-9]`"
-SRCDIRS="/root /etc /conf /var /usr/local/www"
-tsecho "SRCDIRS=$SRCDIRS"
 
 #
 # args
