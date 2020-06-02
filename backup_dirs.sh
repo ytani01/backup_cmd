@@ -68,9 +68,6 @@ if [ -z "${BACKUP_DIRS}" ]; then
     exit 1
 fi
 
-### XXX
-exit 0
-
 #
 # main
 #
