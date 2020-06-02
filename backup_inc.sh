@@ -3,7 +3,6 @@
 # (c) Yoichi Tanibayashi
 #
 MYNAME=`basename $0`
-
 LANG=ja_JP.UTF8
 
 #
@@ -34,9 +33,6 @@ RSYNC_OPT="-avzS --delete"
 COMPLETE_LIST="complete_list.txt"
 tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
 
-#
-# args
-#
 SRCDIR=""
 while [ $# -gt 1 ]; do
     SRCDIR="$SRCDIR $1"
@@ -48,9 +44,15 @@ if [ -z "$SRCDIR" ]; then
     exit 1
 fi
 
+#
+# args
+#
 BACKUP_TOP=$1
 tsecho "BACKUP_TOP=$BACKUP_TOP"
 
+#
+# REMOTE & BACKUP_RDIR
+#
 REMOTE=""
 if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
     REMOTE=`echo $BACKUP_TOP | sed 's/:.*$//'`
@@ -60,6 +62,9 @@ if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
     tsecho "BACKUP_RDIR=$BACKUP_RDIR"
 fi
 
+#
+# PREV_BACKUP, RSYNC_OPT
+#
 if [ ! -z "${REMOTE}"  ]; then
     if ssh ${REMOTE} ls -d $BACKUP_RDIR > /dev/null; then
         RSYNC_OPT="$RSYNC_OPT -e ssh"
@@ -81,18 +86,26 @@ fi
 tsecho "RSYNC_OPT=$RSYNC_OPT"
 tsecho "PREV_BACKUP=$PREV_BACKUP"
 
+#
+# DSTDIR
+#
 DSTDIR="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`"
 tsecho "DSTDIR=$DSTDIR"
 
+#
+# CMDLINE and execute it
+#
 if [ -z $PREV_BACKUP ]; then
     CMDLINE="$RSYNC_CMD $RSYNC_OPT $SRCDIR $DSTDIR"
 else
     CMDLINE="$RSYNC_CMD $RSYNC_OPT --link-dest ../$PREV_BACKUP $SRCDIR $DSTDIR"
 fi
 tsecho "CMDLINE=$CMDLINE"
-
 eval $CMDLINE
 if [ $? -eq 0 ]; then
+    #
+    # COMPLETE_LIST
+    #
     if [ ! -z "${REMOTE}" ]; then
         ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_RDIR}/${COMPLETE_LIST}"
     else

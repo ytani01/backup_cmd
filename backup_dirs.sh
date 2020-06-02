@@ -3,7 +3,6 @@
 # (c) Yoichi Tanibayashi
 #
 MYNAME=`basename $0`
-
 LANG=ja_JP.UTF8
 
 #
