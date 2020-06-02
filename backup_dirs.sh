@@ -5,6 +5,10 @@
 MYNAME=`basename $0`
 LANG=ja_JP.UTF8
 
+BACKUPSRC_FILE="backup_src.txt"
+#BACKUPSRC_DIRS=". ${HOME}/etc ${HOME} /conf/etc /usr/local/etc /etc"
+BACKUPSRC_DIRS="/conf/etc"
+
 #
 # functions
 #
@@ -29,14 +33,26 @@ if [ ! -x ${BACKUP_INC} ]; then
     exit 1
 fi
 
-#SRCDIRS="/boot /root /etc /home /usr/home /conf /opt /var /usr/local/www `echo /.[0-9]`"
-SRCDIRS="/boot /root /etc /home /usr/home /conf /opt /var /usr/local/www"
+SRCDIRS=""
+for d in ${BACKUPSRC_DIRS}; do
+    if [ -f ${d}/${BACKUPSRC_FILE} ]; then
+        tsecho "found: ${d}/${BACKUPSRC_FILE}"
+        SRCDIRS=`cat ${d}/${BACKUPSRC_FILE}`
+        break
+    fi
+done
 tsecho "SRCDIRS=$SRCDIRS"
+if [ -z "${SRCDIRS}" ]; then
+    tsecho "${BACKUPSRC_FILE}: not found"
+    exit 1
+fi
 
 SRCDIRS1=""
 for s in ${SRCDIRS}; do
-    if [ -d $s ]; then
-        SRCDIRS1="${SRCDIRS1} $s"
+    if [ -d ${s} ]; then
+        if [ ! -d ${s}/backups ]; then
+            SRCDIRS1="${SRCDIRS1} $s"
+        fi
     fi
 done
 SRCDIRS1=`echo ${SRCDIRS1} | sed 's/^ //'`
@@ -51,6 +67,9 @@ if [ -z "${BACKUP_DIRS}" ]; then
     usage
     exit 1
 fi
+
+### XXX
+exit 0
 
 #
 # main

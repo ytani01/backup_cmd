@@ -4,8 +4,8 @@
 #
 DSTDIR=/conf/etc
 
-FILES="backup_inc.sh backup_dirs.sh"
+FILES="backup_inc.sh backup_dirs.sh backup_src.txt clean-incomplete-dirs.sh"
 
 for f in ${FILES}; do
-    sudo cp -v $f ${DSTDIR}
+    sudo cp -fv $f ${DSTDIR}
 done
