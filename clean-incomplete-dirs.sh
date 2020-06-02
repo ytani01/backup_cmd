@@ -41,7 +41,7 @@ cd ${BACKUP_TOP}
 
 BACKUP_DIRS=`eval echo ${BACKUP_DIR_PATTERN}`
 tsecho "BACKUP_DIRS=${BACKUP_DIRS}"
-if [ ${BACKUP_DIRS} = ${BACKUP_DIR_PATTERN} ]; then
+if [ "${BACKUP_DIRS}" = "${BACKUP_DIR_PATTERN}" ]; then
     tsecho "no backup dirs"
     exit 1
 fi
