@@ -37,7 +37,9 @@ SRCDIRS=""
 for d in ${BACKUPSRC_DIRS}; do
     if [ -f ${d}/${BACKUPSRC_FILE} ]; then
         tsecho "found: ${d}/${BACKUPSRC_FILE}"
-        SRCDIRS=`cat ${d}/${BACKUPSRC_FILE}`
+        SRCDIRS0=`cat ${d}/${BACKUPSRC_FILE}`
+        tsecho "SRCDIRS0=${SRCDIRS0}"
+        SRCDIRS=`eval echo ${SRCDIRS0}`
         break
     fi
 done
