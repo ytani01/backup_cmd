@@ -77,6 +77,6 @@ for d in ${INCOMPETE_DIRS}; do
         break
     fi
     CMDLINE="rm -rfv ${d}"
-    tsecho "CMDLINE"
+    tsecho "CMDLINE=${CMDLINE}"
     eval ${CMDLINE}
 done
