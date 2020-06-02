@@ -1,10 +1,10 @@
+/conf
 /boot
 /root
 /etc
 /home
 /usr/home
-/conf
 /opt
 /var
 /usr/local/www
-/.[0-9]*
+#/.[0-9]*

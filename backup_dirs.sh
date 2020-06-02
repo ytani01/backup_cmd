@@ -5,16 +5,14 @@
 MYNAME=`basename $0`
 LANG=ja_JP.UTF8
 
-BACKUPSRC_FILE="backup_src.txt"
-#BACKUPSRC_DIRS=". ${HOME}/etc ${HOME} /conf/etc /usr/local/etc /etc"
-BACKUPSRC_DIRS="/conf/etc"
+BACKUPSRC_FILE="/conf/etc/backup_src.txt"
 
 #
 # functions
 #
 usage () {
     echo
-    echo "    usage: ${MYNAME} backup_top1 [backup_top2 ..]"
+    echo "    usage: ${MYNAME} [-f backup_src_file] backup_top1 [backup_top2 ..]"
     echo
 }
 
@@ -22,6 +20,28 @@ tsecho () {
     _DATESTR=`LANG=C date +'%Y/%m/%d(%a) %H:%M:%S'`
     echo "${_DATESTR} ${MYNAME}> $*"
 }
+
+#
+# args
+#
+while getopts f: OPT; do
+    case $OPT in
+        f) if [ ! -z "OPTARG" ]; then
+               BACKUPSRC_FILE=${OPTARG}
+               shift
+           fi;;
+        *) usage
+           exit 1;;
+    esac
+    shift
+done
+
+BACKUP_DSTS="$*"
+tsecho "BACKUP_DSTS=${BACKUP_DSTS}"
+if [ -z "${BACKUP_DSTS}" ]; then
+    usage
+    exit 1
+fi
 
 #
 # variables
@@ -34,15 +54,12 @@ if [ ! -x ${BACKUP_INC} ]; then
 fi
 
 SRCDIRS=""
-for d in ${BACKUPSRC_DIRS}; do
-    if [ -f ${d}/${BACKUPSRC_FILE} ]; then
-        tsecho "found: ${d}/${BACKUPSRC_FILE}"
-        SRCDIRS0=`cat ${d}/${BACKUPSRC_FILE}`
-        tsecho "SRCDIRS0=${SRCDIRS0}"
-        SRCDIRS=`eval echo ${SRCDIRS0}`
-        break
-    fi
-done
+if [ -f ${BACKUPSRC_FILE} ]; then
+    tsecho "found: ${BACKUPSRC_FILE}"
+    SRCDIRS0=`cat ${BACKUPSRC_FILE}`
+    tsecho "SRCDIRS0=${SRCDIRS0}"
+    SRCDIRS=`eval echo ${SRCDIRS0}`
+fi
 tsecho "SRCDIRS=$SRCDIRS"
 if [ -z "${SRCDIRS}" ]; then
     tsecho "${BACKUPSRC_FILE}: not found"
@@ -52,28 +69,16 @@ fi
 SRCDIRS1=""
 for s in ${SRCDIRS}; do
     if [ -d ${s} ]; then
-        if [ ! -d ${s}/backups ]; then
-            SRCDIRS1="${SRCDIRS1} $s"
-        fi
+        SRCDIRS1="${SRCDIRS1} $s"
     fi
 done
 SRCDIRS1=`echo ${SRCDIRS1} | sed 's/^ //'`
 tsecho "SRCDIRS1=${SRCDIRS1}"
 
 #
-# args
-#
-BACKUP_DIRS="$*"
-tsecho "BACKUPDIRS=${BACKUP_DIRS}"
-if [ -z "${BACKUP_DIRS}" ]; then
-    usage
-    exit 1
-fi
-
-#
 # main
 #
-for d in ${BACKUP_DIRS}; do
+for d in ${BACKUP_DSTS}; do
     CMDLINE="$BACKUP_INC ${SRCDIRS1} $d"
     tsecho "CMDLINE=$CMDLINE"
     eval $CMDLINE
