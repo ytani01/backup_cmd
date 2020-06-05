@@ -37,7 +37,7 @@ while getopts f: OPT; do
 done
 
 BACKUP_DSTS="$*"
-tsecho "BACKUP_DSTS=${BACKUP_DSTS}"
+#tsecho "BACKUP_DSTS=${BACKUP_DSTS}"
 if [ -z "${BACKUP_DSTS}" ]; then
     usage
     exit 1
@@ -47,7 +47,7 @@ fi
 # variables
 #
 BACKUP_INC=/conf/etc/backup_inc.sh
-tsecho "BACKUP_INC=$BACKUP_INC"
+#tsecho "BACKUP_INC=$BACKUP_INC"
 if [ ! -x ${BACKUP_INC} ]; then
     tsecho "ERROR: rsync: no such command"
     exit 1
@@ -55,12 +55,12 @@ fi
 
 SRCDIRS=""
 if [ -f ${BACKUPSRC_FILE} ]; then
-    tsecho "found: ${BACKUPSRC_FILE}"
+    #tsecho "found: ${BACKUPSRC_FILE}"
     SRCDIRS0=`cat ${BACKUPSRC_FILE}`
-    tsecho "SRCDIRS0=${SRCDIRS0}"
+    #tsecho "SRCDIRS0=${SRCDIRS0}"
     SRCDIRS=`eval echo ${SRCDIRS0}`
 fi
-tsecho "SRCDIRS=$SRCDIRS"
+#tsecho "SRCDIRS=$SRCDIRS"
 if [ -z "${SRCDIRS}" ]; then
     tsecho "${BACKUPSRC_FILE}: not found"
     exit 1
@@ -73,7 +73,7 @@ for s in ${SRCDIRS}; do
     fi
 done
 SRCDIRS1=`echo ${SRCDIRS1} | sed 's/^ //'`
-tsecho "SRCDIRS1=${SRCDIRS1}"
+#tsecho "SRCDIRS1=${SRCDIRS1}"
 
 #
 # main

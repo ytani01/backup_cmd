@@ -23,7 +23,7 @@ tsecho () {
 # variables
 #
 RSYNC_CMD=`which rsync`
-tsecho "RSYNC_CMD=$RSYNC_CMD"
+#tsecho "RSYNC_CMD=$RSYNC_CMD"
 if [ -z $RSYNC_CMD ]; then
     tsecho "ERROR: rsync: no such command"
     exit 1
@@ -31,14 +31,14 @@ fi
 RSYNC_OPT="-avzS --delete"
 
 COMPLETE_LIST="complete_list.txt"
-tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
+#tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
 
 SRCDIR=""
 while [ $# -gt 1 ]; do
     SRCDIR="$SRCDIR $1"
     shift
 done
-tsecho "SRCDIR=$SRCDIR"
+#tsecho "SRCDIR=$SRCDIR"
 if [ -z "$SRCDIR" ]; then
     usage
     exit 1
@@ -48,7 +48,7 @@ fi
 # args
 #
 BACKUP_TOP=$1
-tsecho "BACKUP_TOP=$BACKUP_TOP"
+#tsecho "BACKUP_TOP=$BACKUP_TOP"
 
 #
 # REMOTE & BACKUP_RDIR
@@ -56,10 +56,10 @@ tsecho "BACKUP_TOP=$BACKUP_TOP"
 REMOTE=""
 if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
     REMOTE=`echo $BACKUP_TOP | sed 's/:.*$//'`
-    tsecho "REMOTE=$REMOTE"
+    #tsecho "REMOTE=$REMOTE"
 
     BACKUP_RDIR=`echo $BACKUP_TOP | sed 's/^.*://'`
-    tsecho "BACKUP_RDIR=$BACKUP_RDIR"
+    #tsecho "BACKUP_RDIR=$BACKUP_RDIR"
 fi
 
 #
@@ -83,14 +83,14 @@ else
         exit 1
     fi
 fi
-tsecho "RSYNC_OPT=$RSYNC_OPT"
-tsecho "PREV_BACKUP=$PREV_BACKUP"
+#tsecho "RSYNC_OPT=$RSYNC_OPT"
+#tsecho "PREV_BACKUP=$PREV_BACKUP"
 
 #
 # DSTDIR
 #
 DSTDIR="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`"
-tsecho "DSTDIR=$DSTDIR"
+#tsecho "DSTDIR=$DSTDIR"
 
 #
 # CMDLINE and execute it
