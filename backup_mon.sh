@@ -34,7 +34,7 @@ get_temp_rpi () {
 }
 
 get_temp_freebsd () {
-    echo TBD
+    sysctl dev.cpu.0.temperature | cut -d ' ' -f2
 }
 
 #
@@ -117,7 +117,10 @@ while true; do
     TS=`date +'%H:%M:%S'`
 
     if [ ${PREV_MB} -ge 0 ]; then
-        echo "$TS  ${D_MB}[MB]/${INTERVAL}[sec]  ${AVAIL}/${TOTAL}  Temp=$TEMP"
+        echo -n "${TS} ${PATTERN} "
+        echo -n "${D_MB}[MB]/${INTERVAL}[sec] "
+        echo -n "Avail: ${AVAIL}/${TOTAL} "
+        echo "Temp: ${TEMP}"
     fi
 
     PREV_MB=$MB
