@@ -30,7 +30,7 @@ get_temp_rpi () {
     t1=`cat /sys/class/thermal/thermal_zone0/temp`
     t2=`expr \( $t1 + 50 \) / 100`
     t3=`echo $t2 | sed 's/\(.\)$/\.\1/'`
-    echo $t3
+    echo "${t3}C"
 }
 
 get_temp_freebsd () {
