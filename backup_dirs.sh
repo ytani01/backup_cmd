@@ -26,7 +26,7 @@ tsecho () {
 #
 while getopts f: OPT; do
     case $OPT in
-        f) if [ ! -z "OPTARG" ]; then
+        f) if [ ! -z "$OPTARG" ]; then
                BACKUPSRC_FILE=${OPTARG}
                shift
            fi;;
