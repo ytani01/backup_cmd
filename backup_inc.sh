@@ -56,10 +56,10 @@ BACKUP_TOP=$1
 REMOTE=""
 if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
     REMOTE=`echo $BACKUP_TOP | sed 's/:.*$//'`
-    #tsecho "REMOTE=$REMOTE"
+    tsecho "REMOTE=$REMOTE"
 
     BACKUP_RDIR=`echo $BACKUP_TOP | sed 's/^.*://'`
-    #tsecho "BACKUP_RDIR=$BACKUP_RDIR"
+    tsecho "BACKUP_RDIR=$BACKUP_RDIR"
 fi
 
 #
@@ -84,7 +84,7 @@ else
     fi
 fi
 #tsecho "RSYNC_OPT=$RSYNC_OPT"
-#tsecho "PREV_BACKUP=$PREV_BACKUP"
+tsecho "PREV_BACKUP=$PREV_BACKUP"
 
 #
 # DSTDIR
