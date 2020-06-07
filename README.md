@@ -22,14 +22,20 @@ $ vi backup_src.txt
 
 ## Scripts usage
 
-### backup_inc.sh
-
-```bash
-$ backup_inc.sh src_dir .. backup_top
-```
-
 ### backup_dirs.sh
 
 ```bash
-$ backup_dirs.sh [-f backup_src_file] backup_top1 [backup_top2 ..]
+backup_dirs.sh [-f backup_src_file] backup_top1 [backup_top2 ..]
+```
+
+### backup_inc.sh
+
+```bash
+backup_inc.sh src_dir .. backup_top
+```
+
+### backup_clean_incomplete.sh
+
+```bash
+backup_clean_incomplete.sh backup_top
 ```
