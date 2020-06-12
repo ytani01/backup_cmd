@@ -102,7 +102,8 @@ else
 fi
 tsecho "CMDLINE=$CMDLINE"
 eval $CMDLINE
-if [ $? -eq 0 ]; then
+RET=$?
+if [ ${RET} -eq 0 ]; then
     #
     # COMPLETE_LIST
     #
@@ -114,4 +115,5 @@ if [ $? -eq 0 ]; then
 fi
 
 echo
-tsecho "done"
+tsecho "done(${RET})"
+exit ${RET}

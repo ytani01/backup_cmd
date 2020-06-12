@@ -78,11 +78,17 @@ SRCDIRS1=`echo ${SRCDIRS1} | sed 's/^ //'`
 #
 # main
 #
+RET=0
 for d in ${BACKUP_DSTS}; do
     CMDLINE="$BACKUP_INC ${SRCDIRS1} $d"
     tsecho "CMDLINE=$CMDLINE"
     eval $CMDLINE
+    RET=$?
+    if [ ${RET} -ne 0 ]; then
+        break
+    fi
 done
 
 echo
-tsecho "done"
+tsecho "done(${RET})"
+exit ${RET}
