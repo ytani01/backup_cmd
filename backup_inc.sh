@@ -90,15 +90,17 @@ tsecho "PREV_BACKUP=$PREV_BACKUP"
 # DSTDIR
 #
 DSTDIR="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`"
+DSTDIR_INCOMPLETE="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`-incomplete"
 #tsecho "DSTDIR=$DSTDIR"
+#tsecho "DSTDIR=$DSTDIR_INCOMPLETE"
 
 #
 # CMDLINE and execute it
 #
 if [ -z $PREV_BACKUP ]; then
-    CMDLINE="$RSYNC_CMD $RSYNC_OPT $SRCDIR $DSTDIR"
+    CMDLINE="$RSYNC_CMD $RSYNC_OPT $SRCDIR $DSTDIR_INCOMPLETE"
 else
-    CMDLINE="$RSYNC_CMD $RSYNC_OPT --link-dest ../$PREV_BACKUP $SRCDIR $DSTDIR"
+    CMDLINE="$RSYNC_CMD $RSYNC_OPT --link-dest ../$PREV_BACKUP $SRCDIR $DSTDIR_INCOMPLETE"
 fi
 tsecho "CMDLINE=$CMDLINE"
 eval $CMDLINE
@@ -108,8 +110,10 @@ if [ ${RET} -eq 0 ]; then
     # COMPLETE_LIST
     #
     if [ ! -z "${REMOTE}" ]; then
+	ssh ${REMOTE} "mv ${DSTDIR_INCOMPLETE} ${DSTDIR}"
         ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_RDIR}/${COMPLETE_LIST}"
     else
+	mv ${DSTDIR_INCOMPLETE} ${DSTDIR}
         basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
     fi
 fi
