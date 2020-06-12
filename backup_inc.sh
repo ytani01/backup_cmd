@@ -51,24 +51,24 @@ BACKUP_TOP=$1
 #tsecho "BACKUP_TOP=$BACKUP_TOP"
 
 #
-# REMOTE & BACKUP_RDIR
+# REMOTE or not
 #
 REMOTE=""
 if echo $BACKUP_TOP | grep ':' > /dev/null 2>&1; then
     REMOTE=`echo $BACKUP_TOP | sed 's/:.*$//'`
     tsecho "REMOTE=$REMOTE"
 
-    BACKUP_RDIR=`echo $BACKUP_TOP | sed 's/^.*://'`
-    tsecho "BACKUP_RDIR=$BACKUP_RDIR"
+    BACKUP_TOP=`echo $BACKUP_TOP | sed 's/^.*://'`
+    tsecho "BACKUP_TOP=$BACKUP_TOP"
 fi
 
 #
 # PREV_BACKUP, RSYNC_OPT
 #
 if [ ! -z "${REMOTE}"  ]; then
-    if ssh ${REMOTE} ls -d $BACKUP_RDIR > /dev/null; then
+    if ssh ${REMOTE} ls -d $BACKUP_TOP > /dev/null; then
         RSYNC_OPT="$RSYNC_OPT -e ssh"
-        PREV_BACKUP=`ssh ${REMOTE} ls -1t $BACKUP_RDIR | grep '^backup-' | head -1`
+        PREV_BACKUP=`ssh ${REMOTE} ls -1t $BACKUP_TOP | grep '^backup-' | head -1`
     else
         tsecho "ERROR: ${REMOTE}:$BACKUP_DIR: invalid directory"
         usage
@@ -89,18 +89,24 @@ tsecho "PREV_BACKUP=$PREV_BACKUP"
 #
 # DSTDIR
 #
-DSTDIR="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`"
-DSTDIR_INCOMPLETE="${BACKUP_TOP}/backup-`date +'%Y%m%d-%H%M%S'`-incomplete"
+DSTDIR_NAME="backup-`date +'%Y%m%d-%H%M%S'`"
+DSTDIR="${BACKUP_TOP}/${DSTDIR_NAME}"
+DSTDIR_INCOMPLETE="${DSTDIR}-incomplete"
 #tsecho "DSTDIR=$DSTDIR"
 #tsecho "DSTDIR=$DSTDIR_INCOMPLETE"
 
 #
 # CMDLINE and execute it
 #
+RSYNC_DST=${DSTDIR_INCOMPLETE}
+if [ ! -z "${REMOTE}" ]; then
+    RSYNC_DST="${REMOTE}:${RSYNC_DST}"
+fi
+
 if [ -z $PREV_BACKUP ]; then
-    CMDLINE="$RSYNC_CMD $RSYNC_OPT $SRCDIR $DSTDIR_INCOMPLETE"
+    CMDLINE="$RSYNC_CMD $RSYNC_OPT $SRCDIR $RSYNC_DST"
 else
-    CMDLINE="$RSYNC_CMD $RSYNC_OPT --link-dest ../$PREV_BACKUP $SRCDIR $DSTDIR_INCOMPLETE"
+    CMDLINE="$RSYNC_CMD $RSYNC_OPT --link-dest ../$PREV_BACKUP $SRCDIR $RSYNC_DST"
 fi
 tsecho "CMDLINE=$CMDLINE"
 eval $CMDLINE
@@ -111,7 +117,7 @@ if [ ${RET} -eq 0 ]; then
     #
     if [ ! -z "${REMOTE}" ]; then
 	ssh ${REMOTE} "mv ${DSTDIR_INCOMPLETE} ${DSTDIR}"
-        ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_RDIR}/${COMPLETE_LIST}"
+        ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}"
     else
 	mv ${DSTDIR_INCOMPLETE} ${DSTDIR}
         basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
