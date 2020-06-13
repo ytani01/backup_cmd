@@ -116,10 +116,10 @@ if [ ${RET} -eq 0 ]; then
     # COMPLETE_LIST
     #
     if [ ! -z "${REMOTE}" ]; then
-	ssh ${REMOTE} "mv ${DSTDIR_INCOMPLETE} ${DSTDIR}"
+	ssh ${REMOTE} "mv -v ${DSTDIR_INCOMPLETE} ${DSTDIR}"
         ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}"
     else
-	mv ${DSTDIR_INCOMPLETE} ${DSTDIR}
+	mv -v ${DSTDIR_INCOMPLETE} ${DSTDIR}
         basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
     fi
 fi
