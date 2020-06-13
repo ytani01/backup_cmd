@@ -28,7 +28,7 @@ if [ -z $RSYNC_CMD ]; then
     tsecho "ERROR: rsync: no such command"
     exit 1
 fi
-RSYNC_OPT="-avzS --delete"
+RSYNC_OPT="-avzS --delete --progress"
 
 COMPLETE_LIST="complete_list.txt"
 #tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
