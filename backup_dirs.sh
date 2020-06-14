@@ -7,12 +7,17 @@ LANG=ja_JP.UTF8
 
 BACKUPSRC_FILE="/conf/etc/backup_src.txt"
 
+BACKUP_INC=/conf/etc/backup_inc.sh
+BACKUP_OPT=
+
+JOBS=1
+
 #
 # functions
 #
 usage () {
     echo
-    echo "    usage: ${MYNAME} [-f backup_src_file] backup_top1 [backup_top2 ..]"
+    echo "    usage: ${MYNAME} [-n] [-j jobs] [-f backup_src_file] backup_top1 [backup_top2 ..]"
     echo
 }
 
@@ -21,20 +26,47 @@ tsecho () {
     echo "${_DATESTR} ${MYNAME}> $*"
 }
 
+tseval() {
+    _CMDLINE=$*
+    tsecho eval "$_CMDLINE"
+    eval "$_CMDLINE"
+    _RET=$?
+    if [ $_RET -ne 0 ]; then
+        tsecho "error($_RET)"
+        exit $_RET
+    fi
+    return $_RET
+}
+
 #
 # args
 #
-while getopts f: OPT; do
+while getopts f:j:n OPT; do
     case $OPT in
-        f) if [ ! -z "$OPTARG" ]; then
+        f) if [ -f $OPTARG ]; then
                BACKUPSRC_FILE=${OPTARG}
-               shift
-           fi;;
+               tsecho "BACKUPSRC_FILE=${BACKUPSRC_FILE}"
+           else
+               usage
+               exit
+           fi
+           ;;
+        j) if [ $OPTARG -ge 1 ]; then
+               JOBS=$OPTARG
+               tsecho "JOBS=$JOBS"
+           else
+               usage
+               exit 1
+           fi
+           ;;
+        n) BACKUP_OPT="${BACKUP_OPT} -n"
+           tsecho "[ DRY RUN ]";;
         *) usage
-           exit 1;;
+           exit 1
+           ;;
     esac
-    shift
 done
+shift `expr $OPTIND - 1`
 
 BACKUP_DSTS="$*"
 #tsecho "BACKUP_DSTS=${BACKUP_DSTS}"
@@ -43,10 +75,6 @@ if [ -z "${BACKUP_DSTS}" ]; then
     exit 1
 fi
 
-#
-# variables
-#
-BACKUP_INC=/conf/etc/backup_inc.sh
 #tsecho "BACKUP_INC=$BACKUP_INC"
 if [ ! -x ${BACKUP_INC} ]; then
     tsecho "ERROR: rsync: no such command"
@@ -78,17 +106,10 @@ SRCDIRS1=`echo ${SRCDIRS1} | sed 's/^ //'`
 #
 # main
 #
-RET=0
 for d in ${BACKUP_DSTS}; do
-    CMDLINE="$BACKUP_INC ${SRCDIRS1} $d"
-    tsecho "CMDLINE=$CMDLINE"
-    eval $CMDLINE
-    RET=$?
-    if [ ${RET} -ne 0 ]; then
-        break
-    fi
+    tseval ${BACKUP_INC} ${BACKUP_OPT} ${SRCDIRS1} $d
 done
 
+tsecho "done"
 echo
-tsecho "done(${RET})"
-exit ${RET}
+exit 0

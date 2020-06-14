@@ -5,18 +5,35 @@
 MYNAME=`basename $0`
 LANG=ja_JP.UTF8
 
+DRY_RUN=
+
 #
 # functions
 #
 usage () {
     echo
-    echo "    usage: ${MYNAME} src_dir .. backup_top"
+    echo "    usage: ${MYNAME} [-n] src_dir .. backup_top"
     echo
 }
 
 tsecho () {
     _DATESTR=`LANG=C date +'%Y/%m/%d(%a) %H:%M:%S'`
     echo "${_DATESTR} ${MYNAME}> $*"
+}
+
+tseval() {
+    _CMDLINE=$*
+    tsecho eval "$_CMDLINE"
+    if [ ! -z "$DRY_RUN" ]; then
+        return 0
+    fi
+    eval "$_CMDLINE"
+    _RET=$?
+    if [ $_RET -ne 0 ]; then
+        tsecho "error($_RET)"
+        exit $_RET
+    fi
+    return $_RET
 }
 
 #
@@ -34,6 +51,19 @@ RSYNC_OPT="-avS --delete --progress"
 
 COMPLETE_LIST="complete_list.txt"
 #tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
+
+while getopts n OPT; do
+    case $OPT in
+        n) RSYNC_OPT="$RSYNC_OPT -n"
+           DRY_RUN=true
+           tsecho "[ DRY RUN ]"
+           ;;
+        *) usage
+           exit 1
+           ;;
+    esac
+done
+shift `expr $OPTIND - 1`
 
 SRCDIR=""
 while [ $# -gt 1 ]; do
@@ -110,22 +140,19 @@ if [ -z $PREV_BACKUP ]; then
 else
     CMDLINE="$RSYNC_CMD $RSYNC_OPT --link-dest ../$PREV_BACKUP $SRCDIR $RSYNC_DST"
 fi
-tsecho "CMDLINE=$CMDLINE"
-eval $CMDLINE
-RET=$?
-if [ ${RET} -eq 0 ]; then
-    #
-    # COMPLETE_LIST
-    #
-    if [ ! -z "${REMOTE}" ]; then
-	ssh ${REMOTE} "mv -v ${DSTDIR_INCOMPLETE} ${DSTDIR}"
-        ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}"
-    else
-	mv -v ${DSTDIR_INCOMPLETE} ${DSTDIR}
-        basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}
-    fi
+tseval $CMDLINE
+
+#
+# COMPLETE_LIST
+#
+if [ ! -z "${REMOTE}" ]; then
+    tseval ssh ${REMOTE} "mv -v ${DSTDIR_INCOMPLETE} ${DSTDIR}"
+    # tseval ssh ${REMOTE} "basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}"
+else
+    tseval mv -v ${DSTDIR_INCOMPLETE} ${DSTDIR}
+    # tseval "basename ${DSTDIR} >> ${BACKUP_TOP}/${COMPLETE_LIST}"
 fi
 
+tsecho "done"
 echo
-tsecho "done(${RET})"
-exit ${RET}
+exit 0
