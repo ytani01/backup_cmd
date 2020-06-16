@@ -3,11 +3,11 @@
 MYNAME=`basename $0`
 
 SRCS="root home usr misc data-utf8 data"
+BACKUP_DST="backup:/tank1/backups/fs"
 
 BASEDIR="/conf/etc"
 BACKUP_CMD="${BASEDIR}/backup_dirs.sh"
 BACKUP_OPT=""
-BACKUP_DST="backup:/tank1/backups/fs"
 
 usage () {
     echo
