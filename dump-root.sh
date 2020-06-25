@@ -73,7 +73,7 @@ tseval "${DUMP_CMD} ${DUMP_DEV} | ${COMPRESS_CMD} > ${DST_TMP}"
 RET=$?
 tsecho "RET=${RET}"
 if [ $RET = 0 ]; then
-    tseval mv ${DST_TMP} ${DST_PATH}
+    tseval mv -fv ${DST_TMP} ${DST_PATH}
 else
     tsecho "ERROR"
 fi
