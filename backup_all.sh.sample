@@ -3,7 +3,7 @@
 MYNAME=`basename $0`
 
 SRCS="root home usr misc data-utf8 data"
-BACKUP_DST="backup:/tank1/backups/fs"
+BACKUP_DST="backup:/tank1/backups/`hostname`"
 
 BASEDIR="/conf/etc"
 BACKUP_CMD="${BASEDIR}/backup_dirs.sh"
