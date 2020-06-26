@@ -48,7 +48,8 @@ fi
 #RSYNC_OPT="-avzS --delete --progress"
 #RSYNC_OPT="-avS --delete --progress --inplace"
 #RSYNC_OPT="-avS --delete --progress"
-RSYNC_OPT="-av --delete --progress"
+#RSYNC_OPT="-av --delete --progress"
+RSYNC_OPT="-av --delete"
 
 COMPLETE_LIST="complete_list.txt"
 #tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
