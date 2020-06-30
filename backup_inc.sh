@@ -49,7 +49,7 @@ fi
 #RSYNC_OPT="-avS --delete --progress --inplace"
 #RSYNC_OPT="-avS --delete --progress"
 #RSYNC_OPT="-av --delete --progress"
-RSYNC_OPT="-av --delete"
+RSYNC_OPT="-avS --delete"
 
 COMPLETE_LIST="complete_list.txt"
 #tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
