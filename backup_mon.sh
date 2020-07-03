@@ -3,7 +3,7 @@
 # (c) Yoichi Tanibayashi
 #
 MYNAME=`basename $0`
-LANG=ja_JP.UTF8
+LANG=ja_JP.UTF-8
 
 DEF_INTERVAL=10
 DEBUG="off"

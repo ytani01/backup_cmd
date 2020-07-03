@@ -3,7 +3,7 @@
 # (c) Yoichi Tanibayashi
 #
 MYNAME=`basename $0`
-LANG=ja_JP.UTF8
+LANG=ja_JP.UTF-8
 
 BACKUPSRC_FILE="/conf/etc/backup_src.txt"
 

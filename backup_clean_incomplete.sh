@@ -2,7 +2,7 @@
 #
 # (c) Yoichi Tanibayashi
 #
-LANG=ja_JP.UTF8
+LANG=ja_JP.UTF-8
 MYNAME=`basename $0`
 
 BACKUP_DIR_PATTERN="backup-????????-??????"
