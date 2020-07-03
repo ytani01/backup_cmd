@@ -45,7 +45,8 @@ if [ -z $RSYNC_CMD ]; then
     tsecho "ERROR: rsync: no such command"
     exit 1
 fi
-RSYNC_CMD="LANG=en_US.UTF-8 ${RSYNC_CMD}"
+#RSYNC_CMD="LANG=en_US.UTF-8 ${RSYNC_CMD}"
+RSYNC_CMD="LANG=ja_JP.UTF-8 ${RSYNC_CMD}"
 #RSYNC_OPT="-avzS --delete --progress"
 #RSYNC_OPT="-avS --delete --progress --inplace"
 #RSYNC_OPT="-avS --delete --progress"
