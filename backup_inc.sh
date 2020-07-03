@@ -3,7 +3,7 @@
 # (c) Yoichi Tanibayashi
 #
 MYNAME=`basename $0`
-LANG=ja_JP.UTF8
+#LANG=ja_JP.UTF-8
 
 DRY_RUN=
 
@@ -25,7 +25,7 @@ tseval() {
     _CMDLINE=$*
     tsecho eval "$_CMDLINE"
     if [ ! -z "$DRY_RUN" ]; then
-        return 0
+        return 1
     fi
     eval "$_CMDLINE"
     _RET=$?
@@ -45,6 +45,7 @@ if [ -z $RSYNC_CMD ]; then
     tsecho "ERROR: rsync: no such command"
     exit 1
 fi
+RSYNC_CMD="LANG=en_US.UTF-8 ${RSYNC_CMD}"
 #RSYNC_OPT="-avzS --delete --progress"
 #RSYNC_OPT="-avS --delete --progress --inplace"
 #RSYNC_OPT="-avS --delete --progress"
