@@ -85,6 +85,7 @@ SRCDIRS=""
 if [ -f ${BACKUPSRC_FILE} ]; then
     #tsecho "found: ${BACKUPSRC_FILE}"
     SRCDIRS0=`cat ${BACKUPSRC_FILE}`
+
     #tsecho "SRCDIRS0=${SRCDIRS0}"
     SRCDIRS=`eval echo ${SRCDIRS0}`
 fi
@@ -95,7 +96,15 @@ if [ -z "${SRCDIRS}" ]; then
 fi
 
 SRCDIRS1=""
+EXCLUDES=""
 for s in ${SRCDIRS}; do
+    if echo $s | grep ^- > /dev/null 2>&1; then
+        EXCLUDES="${EXCLUDES} -e `echo ${s} | sed 's/^-//'`"
+        continue
+    fi
+    if echo $s | grep ^ *# > /dev/null 2>&1; then
+        continue
+    fi
     if [ -d ${s} ]; then
         SRCDIRS1="${SRCDIRS1} $s"
     fi
@@ -107,7 +116,7 @@ SRCDIRS1=`echo ${SRCDIRS1} | sed 's/^ //'`
 # main
 #
 for d in ${BACKUP_DSTS}; do
-    tseval ${BACKUP_INC} ${BACKUP_OPT} ${SRCDIRS1} $d
+    tseval ${BACKUP_INC} ${BACKUP_OPT} ${EXCLUDES} ${SRCDIRS1} $d
 done
 
 tsecho "done"

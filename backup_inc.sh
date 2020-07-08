@@ -12,7 +12,7 @@ DRY_RUN=
 #
 usage () {
     echo
-    echo "    usage: ${MYNAME} [-n] src_dir .. backup_top"
+    echo "    usage: ${MYNAME} [-n] [[-e exclude_pattern] ..] src_dir .. backup_top"
     echo
 }
 
@@ -25,7 +25,7 @@ tseval() {
     _CMDLINE=$*
     tsecho eval "$_CMDLINE"
     if [ ! -z "$DRY_RUN" ]; then
-        return 1
+        return 0
     fi
     eval "$_CMDLINE"
     _RET=$?
@@ -56,12 +56,13 @@ RSYNC_OPT="-avS --delete"
 COMPLETE_LIST="complete_list.txt"
 #tsecho "COMPLETE_LIST=${COMPLETE_LIST}"
 
-while getopts n OPT; do
+while getopts e:n OPT; do
     case $OPT in
-        n) RSYNC_OPT="$RSYNC_OPT -n"
-           DRY_RUN=true
+        n) DRY_RUN=true
+           RSYNC_OPT="$RSYNC_OPT -n"
            tsecho "[ DRY RUN ]"
            ;;
+        e) RSYNC_OPT="$RSYNC_OPT --exclude='${OPTARG}'";;
         *) usage
            exit 1
            ;;
