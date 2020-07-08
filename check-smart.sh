@@ -10,6 +10,7 @@ SMARTCTL_TEST_RESULT_CMD="smartctl -l selftest"
 KEYWD_MODEL_FAMILY="Model Family"
 KEYWD_DEV_MODEL="Device Model"
 KEYWD_FW_VAR="Firmware Version"
+
 KEYWD_ATTR_POWERON="Power_On_Hours"
 KEYWD_ATTR_TEMP="Temperature_Celsius"
 KEYWD_ATTR_REALLOCATE_CT="Reallocated_Sector_Ct"
