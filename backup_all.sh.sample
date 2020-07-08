@@ -1,5 +1,7 @@
 #!/bin/sh
 #
+# (c) Yoichi Tanibayashi
+#
 MYNAME=`basename $0`
 
 SRCS="root home usr misc data-utf8 data"
