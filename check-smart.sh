@@ -54,7 +54,7 @@ out_attr() {
 
 check_smart() {
     _DEV="/dev/$1"
-    if [ ! -c ${_DEV} ]; then
+    if [ ! -c ${_DEV} -a ! -b ${_DEV} ]; then
         tsecho "ERROR: ${_DEV}: no such device"
         exit 1
     fi
