@@ -10,6 +10,8 @@ SMARTCTL_TEST_RESULT_CMD="smartctl -l selftest"
 KEYWD_MODEL_FAMILY="Model Family"
 KEYWD_DEV_MODEL="Device Model"
 KEYWD_FW_VAR="Firmware Version"
+KEYWD_ATTR_POWERON="Power_On_Hours"
+KEYWD_ATTR_TEMP="Temperature_Celsius"
 KEYWD_ATTR_REALLOCATE_CT="Reallocated_Sector_Ct"
 KEYWD_ATTR_PENDING_SECTOR="Current_Pending_Sector"
 KEYWD_ATTR_UNCORRECTABLE="Offline_Uncorrectable"
@@ -62,9 +64,14 @@ check_smart() {
     _OUT=`mktemp`
     sudo ${SMARTCTL_ALL_CMD} ${_DEV} > ${_OUT}
 
+    echo $_DEV
+    echo "====================================="
     out_info "${KEYWD_MODEL_FAMILY}" ${_OUT}
     out_info "${KEYWD_DEV_MODEL}" ${_OUT}
     out_info "${KEYWD_FW_VAR}" ${_OUT}
+    echo "-------------------------------------"
+    out_attr "${KEYWD_ATTR_POWERON}" ${_OUT}
+    out_attr "${KEYWD_ATTR_TEMP}" ${_OUT}
     echo "-------------------------------------"
     out_attr "${KEYWD_ATTR_REALLOCATE_CT}" ${_OUT}
     out_attr "${KEYWD_ATTR_PENDING_SECTOR}" ${_OUT}
@@ -75,7 +82,11 @@ check_smart() {
     rm -f ${_OUT}
 
     sudo ${SMARTCTL_TEST_RESULT_CMD} ${_DEV}
+    _RC=$?
+    echo "_RC=$_RC"
+    return $_RC
 }
 
-
+### main
 check_smart $1
+exit $?
