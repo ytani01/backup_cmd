@@ -16,7 +16,7 @@ usage () {
 }
 
 tsecho () {
-    _DATESTR=`LANG=C date +'%Y/%m%d(%a) %H:%M:%S'`
+    _DATESTR=`LANG=C date +'%Y/%m/%d(%a) %H:%M:%S'`
     echo "${_DATESTR} ${MYNAME}> $*"
 }
 
