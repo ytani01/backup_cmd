@@ -18,9 +18,11 @@ KEYWD_ATTR_REALLOCATE_CT="Reallocated_Sector_Ct"
 KEYWD_ATTR_PENDING_SECTOR="Current_Pending_Sector"
 KEYWD_ATTR_UNCORRECTABLE="Offline_Uncorrectable"
 
+OPT_TEST=
+
 usage() {
     echo
-    echo "    usage: ${MYNAME} [/dev/]dev_name"
+    echo "    usage: ${MYNAME} [-t] [/dev/]dev_name"
     echo
 }
 
@@ -87,7 +89,9 @@ check_smart() {
     
     _OUT=`mktemp`
     sudo ${SMARTCTL_ALL_CMD} ${_DEV} > ${_OUT}
+    _RC=$?
 
+    echo "====================================="
     echo $_DEV
     echo "====================================="
     out_info "${KEYWD_MODEL_FAMILY}" ${_OUT}
@@ -102,16 +106,33 @@ check_smart() {
     out_attr "${KEYWD_ATTR_PENDING_SECTOR}" ${_OUT}
     out_attr "${KEYWD_ATTR_UNCORRECTABLE}" ${_OUT}
     echo "====================================="
-    echo
 
     rm -f ${_OUT}
 
+    if [ -z "$OPT_TEST" ]; then
+	echo "_RC=$_RC"
+	echo "====================================="
+	return $_RC
+    fi
+
     sudo ${SMARTCTL_TEST_RESULT_CMD} ${_DEV}
     _RC=$?
+    echo "====================================="
     echo "_RC=$_RC"
+    echo "====================================="
     return $_RC
 }
 
 ### main
+while getopts t OPT; do
+    case $OPT in
+        t) OPT_TEST=$OPT;;
+        *) usage
+           exit 1
+           ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
 check_smart $1
 exit $?
