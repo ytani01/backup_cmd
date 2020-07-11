@@ -93,6 +93,12 @@ check_smart() {
 
     echo "====================================="
     echo $_DEV
+    for d in /dev/gpt /dev/disk/by-partlabel; do
+	if [ -d $d ]; then
+	    LANG=C ls -l $d | grep `basename $_DEV` | sed 's/  */ /g' | cut -d ' ' -f 9-
+	fi
+    done
+
     echo "====================================="
     out_info "${KEYWD_MODEL_FAMILY}" ${_OUT}
     out_info "${KEYWD_DEV_MODEL}" ${_OUT}
