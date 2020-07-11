@@ -9,6 +9,7 @@ SMARTCTL_TEST_RESULT_CMD="smartctl -l selftest"
 
 KEYWD_MODEL_FAMILY="Model Family"
 KEYWD_DEV_MODEL="Device Model"
+KEYWD_DEV_SNO="Serial Number"
 KEYWD_FW_VAR="Firmware Version"
 
 KEYWD_ATTR_POWERON="Power_On_Hours"
@@ -91,6 +92,7 @@ check_smart() {
     echo "====================================="
     out_info "${KEYWD_MODEL_FAMILY}" ${_OUT}
     out_info "${KEYWD_DEV_MODEL}" ${_OUT}
+    out_info "${KEYWD_DEV_SNO}" ${_OUT}
     out_info "${KEYWD_FW_VAR}" ${_OUT}
     echo "-------------------------------------"
     out_attr "${KEYWD_ATTR_POWERON}" ${_OUT}
