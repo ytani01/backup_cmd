@@ -19,7 +19,7 @@ KEYWD_ATTR_UNCORRECTABLE="Offline_Uncorrectable"
 
 usage() {
     echo
-    echo "    usage: ${MYNAME} dev(without '/dev/'"
+    echo "    usage: ${MYNAME} [/dev/]dev_name"
     echo
 }
 
@@ -56,7 +56,15 @@ out_attr() {
 }
 
 check_smart() {
-    _DEV="/dev/$1"
+    if [ -z $1 ]; then
+	usage
+	exit 1
+    fi
+    if echo $1 | grep ^/dev/ > /dev/null 2>&1; then
+	_DEV=$1
+    else
+	_DEV="/dev/$1"
+    fi
     if [ ! -c ${_DEV} -a ! -b ${_DEV} ]; then
         tsecho "ERROR: ${_DEV}: no such device"
         exit 1
