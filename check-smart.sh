@@ -49,10 +49,24 @@ out_attr() {
     _LINE1=`eval "grep '$1' $2" | sed 's/^ //'`
     #tsecho "_LINE1=$_LINE1"
 
-    _LINE2=`echo ${_LINE1} | cut -d ' ' -f 2,10`
-    #tsecho "_LINE2=$_LINE2"
+    _TITLE=`echo ${_LINE1} | cut -d ' ' -f 2`
+    _VALUE=`echo ${_LINE1} | cut -d ' ' -f 10`
+    _RAW_VALUE=$_VALUE
+    _UNIT="hours"
 
-    echo $_LINE2
+    if [ $_TITLE = $KEYWD_ATTR_POWERON ]; then
+        if [ `echo "$_VALUE > 24" | bc` -eq 1 ]; then
+            _VALUE=`echo "scale=1; ${_VALUE} / 24" | bc`
+            _UNIT="days"
+            if [ `echo "$_VALUE > 365" | bc` -eq 1 ]; then
+                _VALUE=`echo "scale=1; ${_VALUE} / 365" | bc`
+                _UNIT="years"
+            fi
+        fi
+        _VALUE="$_RAW_VALUE ($_VALUE $_UNIT)"
+    fi
+
+    echo ${_TITLE}: ${_VALUE}
 }
 
 check_smart() {
