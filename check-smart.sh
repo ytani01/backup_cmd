@@ -132,7 +132,7 @@ check_smart() {
 ### main
 while getopts t OPT; do
     case $OPT in
-        t) OPT_TEST=$OPT;;
+        t) OPT_TEST="-t";;
         *) usage
            exit 1
            ;;
