@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/sh
 #
 # (c) 2021 Yoichi Tanibayashi
 #
@@ -16,7 +16,8 @@ else
     OLD_DAY1=`date --date "last month" +'%Y%m%d'`
     OLD_DAY2=`date --date "4 month ago" +'%Y%m%d'`
 fi
-echo $OLD_DAY1 $OLD_DAY2
+echo OLD_DAY1=$OLD_DAY1
+echo OLD_DAY2=$OLD_DAY2
 
 #
 # functions
@@ -50,23 +51,38 @@ set_OX() {
 
     for d in `cat $_BACKUP_DIRS`; do
         d1=`get_date $d`
-        #echo d1 = $d1
+
         if [ $d1 -gt $OLD_DAY1 ]; then
+            # OLD_DAY1 より新しい .. 残す
             echo "# $d"
+
+        # OLD_DAY1 以前
         elif [ `expr $d1 % 2` -eq 0 ]; then
+            # 日付が偶数 .. 削除
             echo "X $d"
+
+        # OLD_DAY1 以前、日付が奇数
         elif [ $d1 -gt $OLD_DAY2 ]; then
+            # OLD_DAY2 より新しい .. 残す
             echo "# $d"
+
+        # OLD_DAY2 以前、日付が奇数
         elif [ `echo $d1 | sed 's/^......//'` = "31" ]; then
+            # 31日 .. 削除
             echo "X $d"
+
+        # OLD_DAY2 以前、日付が奇数、31日以外
         elif [ `echo $d1 | sed 's/^.......//'` = "1" ]; then
+            # 日付の末尾が「1」 .. 残す
             echo "# $d"
+
+        # OLD_DAY2 以前、日付の末尾が「1」以外
         else
             echo "X $d"
         fi
     done
 
-    rm -fv $_BACKUP_DIRS
+    rm -f $_BACKUP_DIRS
     return 0
 }
 
@@ -89,6 +105,11 @@ for dir in $*; do
     RM_SCRIPT=`mktemp /tmp/$MYNAME-XXX.sh`
     set_OX $dir | sed 's/^O/#/' | sed 's/^X/rm -rf /' > $RM_SCRIPT
 
-    sudo sh -x $RM_SCRIPT
-    rm -fv $RM_SCRIPT
+    if [ $DRY_RUN -ne 1 ]; then
+        sudo sh -x $RM_SCRIPT
+    else
+        cat $RM_SCRIPT
+    fi
+
+    rm -f $RM_SCRIPT
 done
