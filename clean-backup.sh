@@ -7,6 +7,7 @@ MYDIR=`dirname $0`
 OS_NAME=`uname -o`
 
 DRY_RUN=0
+VERBOSE=""
 BACKUP_PREFIX="backup-"
 
 if [ $OS_NAME = "FreeBSD" ]; then
@@ -89,9 +90,10 @@ set_OX() {
 #
 # main
 #
-while getopts n OPT; do
+while getopts nv OPT; do
     case $OPT in
         n) DRY_RUN=1;;
+        v) VERBOSE="-v";;
         *) usage
            exit 1
            ;;
@@ -103,12 +105,12 @@ echo $*
 
 for dir in $*; do
     RM_SCRIPT=`mktemp /tmp/$MYNAME-XXX.sh`
-    set_OX $dir | sed 's/^O/#/' | sed 's/^X/rm -rf /' > $RM_SCRIPT
+    set_OX $dir | sed 's/^O/#/' | sed "s/^X/rm -rf $VERBOSE /" > $RM_SCRIPT
 
     if [ $DRY_RUN -ne 1 ]; then
         sudo sh -x $RM_SCRIPT
     else
-        cat $RM_SCRIPT
+        grep '^rm' $RM_SCRIPT
     fi
 
     rm -f $RM_SCRIPT
