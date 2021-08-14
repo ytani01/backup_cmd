@@ -50,9 +50,15 @@ set_OX() {
 
     ls -d $_DIR/backup-20[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9][0-9][0-9]* > $_BACKUP_DIRS
 
+    prev_d1=0
+    prev_d=""
     for d in `cat $_BACKUP_DIRS`; do
         d1=`get_date $d`
 
+        if [ $d1 -eq $prev_d1 ]; then
+            echo "X $prev_d"
+        fi
+        
         if [ $d1 -gt $OLD_DAY1 ]; then
             # OLD_DAY1 より新しい .. 残す
             echo "# $d"
@@ -81,6 +87,9 @@ set_OX() {
         else
             echo "X $d"
         fi
+
+        prev_d=$d
+        prev_d1=$d1
     done
 
     rm -f $_BACKUP_DIRS
