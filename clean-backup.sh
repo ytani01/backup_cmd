@@ -53,15 +53,16 @@ set_OX() {
     prev_d1=0
     prev_d=""
     for d in `cat $_BACKUP_DIRS`; do
-	if [ X$d = X`tail -1 $_BACKUP_DIRS` ]; then
-	    echo "O $d"
-	    break
-	fi
         d1=`get_date $d`
 
         if [ $d1 -eq $prev_d1 ]; then
             echo "X $prev_d"
         fi
+
+	if [ X$d = X`tail -1 $_BACKUP_DIRS` ]; then
+	    echo "O $d"
+	    break
+	fi
         
         if [ $d1 -gt $OLD_DAY1 ]; then
             # OLD_DAY1 より新しい .. 残す
