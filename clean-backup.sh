@@ -53,6 +53,10 @@ set_OX() {
     prev_d1=0
     prev_d=""
     for d in `cat $_BACKUP_DIRS`; do
+	if [ X$d = X`tail -1 $_BACKUP_DIRS` ]; then
+	    echo "O $d"
+	    break
+	fi
         d1=`get_date $d`
 
         if [ $d1 -eq $prev_d1 ]; then
@@ -61,7 +65,7 @@ set_OX() {
         
         if [ $d1 -gt $OLD_DAY1 ]; then
             # OLD_DAY1 より新しい .. 残す
-            echo "# $d"
+            echo "O $d"
 
         # OLD_DAY1 以前
         elif [ `expr $d1 % 2` -eq 0 ]; then
@@ -71,7 +75,7 @@ set_OX() {
         # OLD_DAY1 以前、日付が奇数
         elif [ $d1 -gt $OLD_DAY2 ]; then
             # OLD_DAY2 より新しい .. 残す
-            echo "# $d"
+            echo "O $d"
 
         # OLD_DAY2 以前、日付が奇数
         elif [ `echo $d1 | sed 's/^......//'` = "31" ]; then
@@ -81,7 +85,7 @@ set_OX() {
         # OLD_DAY2 以前、日付が奇数、31日以外
         elif [ `echo $d1 | sed 's/^.......//'` = "1" ]; then
             # 日付の末尾が「1」 .. 残す
-            echo "# $d"
+            echo "O $d"
 
         # OLD_DAY2 以前、日付の末尾が「1」以外
         else
