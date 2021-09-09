@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# (c) Yoichi Tanibayashi
+# Copyright (c) 2020 Yoichi Tanibayashi
 #
 MYNAME=`basename $0`
 
@@ -52,9 +52,9 @@ done
 shift `expr $OPTIND - 1`
 
 for s in $SRCS; do
-    tsecho "src=${s}"
+    tsecho "========== src=${s}: start =========="
     tseval ${BACKUP_CMD} ${BACKUP_OPT} -f ${BASEDIR}/backup_src-${s}.txt ${BACKUP_DST}/${s}
-    tsecho "src=${s}: done.  =========="
+    tsecho "========== src=${s}: done =========="
     echo ""
 done
 
