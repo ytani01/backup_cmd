@@ -87,7 +87,7 @@ if [ -f ${BACKUPSRC_FILE} ]; then
     SRCDIRS0=`cat ${BACKUPSRC_FILE}`
 
     #tsecho "SRCDIRS0=${SRCDIRS0}"
-    SRCDIRS=`eval echo ${SRCDIRS0}`
+    SRCDIRS=`echo ${SRCDIRS0}`
 fi
 #tsecho "SRCDIRS=$SRCDIRS"
 if [ -z "${SRCDIRS}" ]; then
@@ -98,11 +98,11 @@ fi
 SRCDIRS1=""
 EXCLUDES=""
 for s in ${SRCDIRS}; do
-    if echo $s | grep ^- > /dev/null 2>&1; then
+    if echo $s | grep '^-' > /dev/null 2>&1; then
         EXCLUDES="${EXCLUDES} -e `echo ${s} | sed 's/^-//'`"
         continue
     fi
-    if echo $s | grep ^ *# > /dev/null 2>&1; then
+    if echo $s | grep '^ *#' > /dev/null 2>&1; then
         continue
     fi
     if [ -d ${s} ]; then
