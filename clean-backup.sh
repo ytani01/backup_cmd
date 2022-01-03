@@ -34,7 +34,7 @@ usage() {
 get_date() {
     _DIRNAME=$1
 
-    echo $_DIRNAME | sed 's/^.*backup-//' | sed 's/-......$//'
+    echo $_DIRNAME | sed 's/-incomplete$//' | sed 's/^.*backup-//' | sed 's/-......$//'
 }
 
 set_OX() {
