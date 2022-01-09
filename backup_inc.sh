@@ -105,7 +105,7 @@ fi
 if [ ! -z "${REMOTE}"  ]; then
     if ssh ${REMOTE} ls -d $BACKUP_TOP > /dev/null; then
         RSYNC_OPT="$RSYNC_OPT -e ssh"
-        PREV_BACKUP=`ssh ${REMOTE} ls -1t $BACKUP_TOP | grep '^backup-' | head -1`
+        PREV_BACKUP=`ssh ${REMOTE} ls -1r $BACKUP_TOP | grep '^backup-' | head -1`
     else
         tsecho "ERROR: ${REMOTE}:$BACKUP_DIR: invalid directory"
         usage
