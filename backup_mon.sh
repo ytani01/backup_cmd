@@ -114,9 +114,18 @@ while true; do
     else
         TEMP="no temperature"
     fi
+    tsecho "TEMP=$TEMP"
+
+    TEMP1=`echo $TEMP | sed 's/\..*$//'`
+    tsecho "TEMP1=$TEMP1"
 
     if [ ${D_MB} -eq 0 ]; then
-	if [ ${TEMP} = ${PREV_TEMP} ]; then
+	tsecho "PREV_TEMP=$PREV_TEMP"
+
+	D_TEMP=`expr $TEMP1 - $PREV_TEMP | sed 's/^-//'`
+	tsecho "D_TEMP=$D_TEMP"
+
+	if [ $D_TEMP -le 2 ]; then
 	    sleep ${INTERVAL}
 	    continue
 	fi
@@ -132,7 +141,7 @@ while true; do
     fi
 
     PREV_MB=$MB
-    PREV_TEMP=$TEMP
+    PREV_TEMP=$TEMP1
     sleep ${INTERVAL}
 done
 
