@@ -80,6 +80,7 @@ PATTERN=$1
 tsecho "PATTERN=$PATTERN"
 
 PREV_MB=-1
+PREV_TEMP=0
 while true; do
     DFLINE=`df -m | grep ${PATTERN} | wc -l`
     tsecho "DFLINE=$DFLINE"
@@ -114,16 +115,24 @@ while true; do
         TEMP="no temperature"
     fi
 
+    if [ ${D_MB} -eq 0 ]; then
+	if [ ${TEMP} = ${PREV_TEMP} ]; then
+	    sleep ${INTERVAL}
+	    continue
+	fi
+    fi
+
     TS=`date +'%H:%M:%S'`
 
     if [ ${PREV_MB} -ge 0 ]; then
         echo -n "${TS} ${PATTERN} "
         echo -n "${D_MB}[MB]/${INTERVAL}[sec] "
         echo -n "Avail: ${AVAIL}/${TOTAL} "
-        echo "Temp: ${TEMP}"
+        echo "CPU Temp: ${TEMP}"
     fi
 
     PREV_MB=$MB
+    PREV_TEMP=$TEMP
     sleep ${INTERVAL}
 done
 
