@@ -12,10 +12,10 @@ BACKUP_PREFIX="backup-"
 
 if [ $OS_NAME = "FreeBSD" ]; then
     OLD_DAY1=`date -v -1m +'%Y%m%d'`
-    OLD_DAY2=`date -v -4m +'%Y%m%d'`
+    OLD_DAY2=`date -v -3m +'%Y%m%d'`
 else
     OLD_DAY1=`date --date "last month" +'%Y%m%d'`
-    OLD_DAY2=`date --date "4 month ago" +'%Y%m%d'`
+    OLD_DAY2=`date --date "3 month ago" +'%Y%m%d'`
 fi
 echo OLD_DAY1=$OLD_DAY1
 echo OLD_DAY2=$OLD_DAY2
