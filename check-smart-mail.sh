@@ -8,7 +8,7 @@ DISKS="sdb sdc sdd sde sdf"
 MAIL_TO="yoichi@tanibayashi.jp"
 MAIL_SUBJECT="$MYNAME"
 
-CHECK_SMART=/conf/etc/check-smart.sh
+CHECK_SMART=/conf/etc/backupcmd/check-smart.sh
 CHECK_SMART_OPT=
 TEMP_FILE=`mktemp`
 DRY_RUN=

@@ -15,7 +15,7 @@ $ ./install.sh
 ### edit ``backup_src.txt``
 
 ```bash
-$ cd /conf/etc
+$ cd /conf/etc/backupcmd
 $ cp backup_src.txt.sample backup_src.txt
 $ vi backup_src.txt
 ```
