@@ -5,9 +5,9 @@
 MYNAME=`basename $0`
 LANG=ja_JP.UTF-8
 
-BACKUPSRC_FILE="/conf/etc/backup_src.txt"
+BACKUPSRC_FILE="/conf/etc/backupcmd/backup_src.txt"
 
-BACKUP_INC=/conf/etc/backup_inc.sh
+BACKUP_INC=/conf/etc/backupcmd/backup_inc.sh
 BACKUP_OPT=
 
 JOBS=1
