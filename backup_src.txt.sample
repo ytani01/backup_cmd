@@ -8,3 +8,9 @@
 /var
 /usr/local/www
 #/.[0-9]*
+-.git/
+-.venv/
+-venv/
+-.emacs.d/
+-_cacache/
+-.npm/
